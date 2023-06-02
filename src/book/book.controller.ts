@@ -3,6 +3,7 @@ import { Book } from './schemas/book.schema';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { Response } from 'express';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 @Controller('books')
 export class BookController {
@@ -29,7 +30,7 @@ export class BookController {
     @Put(':id')
     async updateBook(
         @Param('id') id: string,
-        @Body() book: Book
+        @Body() book: UpdateBookDto
     ): Promise<{ success: boolean; message: string; book?: Book }> {
         try {
             const updatedBook = await this.bookService.update(id, book);

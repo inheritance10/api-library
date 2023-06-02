@@ -44,7 +44,7 @@ export class BookService {
                 runValidators: true,
             });
 
-            return {
+            return {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
                 success: true,
                 message: 'Kitap güncellendi',
                 book: updatedBook,
@@ -55,6 +55,11 @@ export class BookService {
                 message: 'Kitap güncelleme işlemi başarısız',
             };
         }
+    }
+
+    async destroy (id:string) : Promise<Book>{
+        const existingBook = await this.bookModel.findByIdAndDelete(id);
+        return existingBook;
     }
 
 
