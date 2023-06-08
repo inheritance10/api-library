@@ -1,17 +1,17 @@
-import { Controller, Get, Post, Body, Param, Put, Res, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Res, NotFoundException, Delete, Query } from '@nestjs/common';
 import { Book } from './schemas/book.schema';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { Response } from 'express';
 import { UpdateBookDto } from './dto/update-book.dto';
-
+import {Query as ExpressQuery} from  'express-serve-static-core';
 @Controller('books')
 export class BookController {
-    constructor(private bookService: BookService) { }
-    @Get()
-    async getAllBook(): Promise<Book[]> {
-        return this.bookService.findAll();
-    }
+  constructor(private bookService: BookService) {}
+  @Get()
+  async getAllBook(@Query() query : ExpressQuery): Promise<Book[]> {
+    return this.bookService.findAll(query);
+  }
 
     @Post()
     async createBook(@Body() book: CreateBookDto): Promise<Book> {
@@ -23,7 +23,6 @@ export class BookController {
         @Param('id')
         id: string
     ): Promise<Book> {
-
         return this.bookService.findById(id);
     }
 
@@ -47,5 +46,11 @@ export class BookController {
         }
     }
 
-
+    @Delete(':id')
+    async deleteBook(
+        @Param('id')
+        id: string
+    ): Promise<Book>{
+        return this.bookService.destroy(id);
+    }
 }
