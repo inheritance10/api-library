@@ -6,7 +6,6 @@ import * as bcrypt from 'bcryptjs'
 import { JwtService } from "@nestjs/jwt";
 import { SignupDto } from "./dto/signup.dto";
 import { LoginDto } from "./dto/login.dto";
-import { use } from "passport";
 @Injectable()
 export class AuthService {
   constructor(
@@ -23,7 +22,7 @@ export class AuthService {
     const user = await this.userModel.create({
       name,
       email,
-      hashPassword
+      password : hashPassword
     });
 
     const token = this.jwtService.sign({ id: user._id });
@@ -31,25 +30,24 @@ export class AuthService {
     return { token: token };
   }
 
-  async login(loginDto : LoginDto) : Promise<{token : string}>
-  {
-    const {email, password } = loginDto;
+  async login(loginDto: LoginDto): Promise<{ token: string; /*user: User*/ }> { //promise ile geriye ne değer dondurecegimizi belirtiyoruz
+    const { email, password } = loginDto;
 
-    const user = await this.userModel.findOne({email});
+    const user = await this.userModel.findOne({ email });
 
-    if(!user) {
-       throw new UnauthorizedException('Invalid email or password');
-    }
-
-    const isPasswordMatched = await bcrypt.compare(password, user.password)
-
-    if(!isPasswordMatched) {
+    if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const token = this.jwtService.sign({id: user._id})
+    const isPasswordMatched = await bcrypt.compare(password, user.password);
 
-    return { token: token };
+    if (!isPasswordMatched) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    const token = this.jwtService.sign({ id: user._id });
+
+    return { token: token};
   }
 
 }
