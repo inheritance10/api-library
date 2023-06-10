@@ -11,7 +11,7 @@ export class BookService {
 
   async findAll(query: Query): Promise<Book[]> {
     //pagination
-    const resPerPage = 2;
+   /* const resPerPage = 2;
     const currentPage = Number(query.page) || 1;
     const skip = resPerPage * (currentPage - 1);
 
@@ -21,7 +21,8 @@ export class BookService {
         $options: 'i'
       }
     } : {}
-    const books = await this.bookModel.find({...keyword}).limit(resPerPage).skip(skip);
+    const books = await this.bookModel.find({...keyword}).limit(resPerPage).skip(skip);*/
+    const books = await this.bookModel.find()
     return books;
   }
 
